@@ -30,6 +30,7 @@ class PagesController extends Controller
         if ($user->hasStripeId()) {
             $invoices = $user->invoicesIncludingPending();
             $cardData = $user->asStripeCustomer()->sources->data;
+            dd($cardData);
 
             if (!isset($cardData[0]))
                 $cards = null;
@@ -177,6 +178,15 @@ class PagesController extends Controller
     {
         $user = User::find(Auth::id());
         return view('pages.start')->with('user', $user);
+    }
+
+    public function history(){
+        $user = User::find(Auth::id());
+        return view('pages.history')->with('user', $user);
+    }
+    public function view_page(){
+        $buffer_posts = BufferPosting::with(['groupInfo', 'accountInfo'])->paginate(15);
+        return view('pages.view-page')->with('buffer_posts', $buffer_posts);
     }
 
     public function friday()
